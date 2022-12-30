@@ -8,6 +8,10 @@ import usePreventLeave from "./usePreventLeave";
 import useBeforeLeave from "./useBeforeLeave";
 import useFadeIn from "./useFadeIn";
 import useNetwork from "./useNetwork";
+import useScroll from "./useScroll";
+import useFullscreen from "./useFullscreen";
+import useNotification from "./useNotification";
+import useAxios from "./useAxios";
 import { useRef } from "react";
 
 const content = [
@@ -57,14 +61,28 @@ function App() {
   const fadeInH1 = useFadeIn(2);
   const fadeInP = useFadeIn(5);
 
-  // useNetwork : online / offline이 되는 것을 막아줌.
+  // useNetwork : online / offline 확인.
   const handleNetworkChange = (online) => {
     console.log(online ? "we just went online" : "we are offline");
   };
   const online = useNetwork(handleNetworkChange);
 
+  // usescroll : 스크롤 할 때 효과 넣기
+  const { y } = useScroll();
+
+  // useFullscreen : 선택하면 full screen으로 만들어줌.
+  const { element, triggerFull, exitFull } = useFullscreen();
+
+  // useNotification : 알람 (notification API)
+  const triggerNotif = useNotification("Can I steal your kimchi?");
+
+  // useAxios
+  const { loading, data, error, refetch } = useAxios({
+    url: "https://yts.mx/api/v2/list_movies.json",
+  });
+
   return (
-    <div>
+    <div style={{ height: "1000vh" }}>
       <h2>You can't write down "@"</h2>
       <input placeholder="Name" {...name}></input>
       <h2>Select option</h2>
@@ -84,6 +102,21 @@ function App() {
       <h1 {...fadeInH1}>Fade In</h1>
       <p {...fadeInP}>lalalala</p>
       <h1>{handleNetworkChange}</h1>
+      <h1 style={{ position: "fixed", color: y > 100 ? "red" : "blue" }}>
+        Scroll
+      </h1>
+      <img
+        ref={element}
+        src="img/mountain.jpg"
+        alt="img"
+        style={{ width: "300px" }}
+      ></img>
+      <button onClick={triggerFull}>Make fullscreen</button>
+      <button onClick={exitFull}>Exit fullscreen</button>
+      <button onClick={triggerNotif}>Notification</button>
+      <h1>{data && data.status}</h1>
+      <h2>{loading && "Loading"}</h2>
+      <button onClick={refetch}>Refetch</button>
     </div>
   );
 }
