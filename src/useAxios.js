@@ -18,19 +18,19 @@ const useAxios = (opts, axiosInstance = defaultAxios) => {
     });
     setTrigger(Date.now());
   };
-  useEffect(() => {
-    axiosInstance(opts)
-      .then((data) => {
-        setState({
-          ...state,
-          loading: false,
-          data,
-        });
-      })
-      .catch((error) => {
-        setState({ ...state, loading: false, error });
-      });
-  }, [trigger]);
+  // useEffect(() => {
+  //   axiosInstance(opts)
+  //     .then((data) => {
+  //       setState({
+  //         ...state,
+  //         loading: false,
+  //         data,
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       setState({ ...state, loading: false, error });
+  //     });
+  // }, [trigger]);
   return { ...state, refetch };
 };
 
